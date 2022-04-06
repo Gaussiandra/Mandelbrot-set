@@ -1,6 +1,6 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
 #include "mandelbrot.hpp" 
 
 mandelbrot_t* initMandelbrotGen(unsigned int W, unsigned int H) {
