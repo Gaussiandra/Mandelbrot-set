@@ -30,10 +30,10 @@ void deleteMandelbrotObj(mandelbrot_t *obj) {
 
 void calcMandelbrotSet(mandelbrot_t *obj) {
     for (int iy = 0; iy < obj->H; ++iy) {
-        float x0 = ( (   - (float)obj->W / 2) * obj->dx + obj->ROI_X) * obj->scale, //??
-              y0 = ( (iy - (float)obj->H / 2) * obj->dy + obj->ROI_Y) * obj->scale;
-        
-        for (int ix = 0; ix < obj->W; ++ix, x0 += obj->dx) {
+        for (int ix = 0; ix < obj->W; ++ix) {
+            float x0 = (((float)ix - (float)obj->W / 2) * obj->dx) * obj->scale + obj->ROI_X;
+            float y0 = (((float)iy - (float)obj->H / 2) * obj->dy) * obj->scale + obj->ROI_Y;
+
             float X = x0, Y = y0;
 
             int curIter = 0;
