@@ -1,17 +1,36 @@
-CXX_flags = -g -std=c++14 -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Wc++0x-compat -Wc++11-compat -Wc++14-compat -Wcast-align -Wcast-qual -Wchar-subscripts -Wconditionally-supported -Wconversion -Wctor-dtor-privacy -Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat-signedness -Wformat=2 -Winline -Wlarger-than=8192 -Wlogical-op -Wnon-virtual-dtor -Wopenmp-simd -Woverloaded-virtual -Wpacked -Wpointer-arith -Wredundant-decls -Wshadow -Wsign-conversion -Wsign-promo -Wstack-usage=8192 -Wstrict-null-sentinel -Wstrict-overflow=2 -Wsuggest-attribute=noreturn -Wsuggest-final-methods -Wsuggest-final-types -Wsuggest-override -Wswitch-default -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code -Wunused -Wuseless-cast -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers -Wno-narrowing -Wno-old-style-cast -Wno-varargs -fcheck-new -fsized-deallocation -fstack-protector -fstrict-overflow -flto-odr-type-merging -fno-omit-frame-pointer -fPIE -fsanitize=address -fsanitize=alignment -fsanitize=bool -fsanitize=bounds -fsanitize=enum -fsanitize=float-cast-overflow -fsanitize=float-divide-by-zero -fsanitize=integer-divide-by-zero -fsanitize=leak -fsanitize=nonnull-attribute -fsanitize=null -fsanitize=object-size -fsanitize=return -fsanitize=returns-nonnull-attribute -fsanitize=shift -fsanitize=signed-integer-overflow -fsanitize=undefined -fsanitize=unreachable -fsanitize=vla-bound -fsanitize=vptr -lm -pie
+SFML_flags = -lsfml-graphics -lsfml-window -lsfml-system
+CXX_NoSSE_flags = -O2
+CXX_SSE_flags = -D SSE -O2 -mavx2 
 
+#---------------------------------------
 
-exec: mandelbrot.out
-	./mandelbrot.out
+exec_nosse: mandelbrot-nosse.out
+	./mandelbrot-nosse.out
 
-mandelbrot.out: window.o mandelbrot.o
-	g++ window.o mandelbrot.o $(CXX_flags) -lsfml-graphics -lsfml-window -lsfml-system -o mandelbrot.out
+window-nosse.o: window.cpp
+	g++ -c window.cpp $(CXX_NoSSE_flags) -o window-nosse.o
 
-window.o: window.cpp
-	g++ -c window.cpp $(CXX_flags) -o window.o
+mandelbrot-nosse.out: window-nosse.o mandelbrot-nosse.o
+	g++ window-nosse.o mandelbrot-nosse.o $(CXX_NoSSE_flags) $(SFML_flags) -o mandelbrot-nosse.out
 
-mandelbrot.o: mandelbrot.cpp mandelbrot.hpp
-	g++ -c mandelbrot.cpp $(CXX_flags) -o mandelbrot.o
+mandelbrot-nosse.o: mandelbrot-nosse.cpp mandelbrot.hpp
+	g++ -c mandelbrot-nosse.cpp $(CXX_NoSSE_flags) -o mandelbrot-nosse.o
+
+#---------------------------------------
+
+exec_sse: mandelbrot-sse.out
+	./mandelbrot-sse.out
+
+window-sse.o: window.cpp
+	g++ -c window.cpp $(CXX_SSE_flags) -o window-sse.o
+
+mandelbrot-sse.out: window-sse.o mandelbrot-sse.o
+	g++ window-sse.o mandelbrot-sse.o $(CXX_SSE_flags) $(SFML_flags) -o mandelbrot-sse.out
+
+mandelbrot-sse.o: mandelbrot-sse.cpp mandelbrot.hpp
+	g++ -c mandelbrot-sse.cpp $(CXX_SSE_flags) -o mandelbrot-sse.o
+
+#---------------------------------------
 
 clear:
-	rm mandelbrot.o window.o mandelbrot.out
+	rm mandelbrot-nosse.o mandelbrot-sse.o window-nosse.o window-sse.o mandelbrot-nosse.out mandelbrot-sse.out

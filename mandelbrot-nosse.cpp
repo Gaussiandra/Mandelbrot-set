@@ -14,7 +14,7 @@ mandelbrot_t* initMandelbrotGen(unsigned int W, unsigned int H) {
     newObj->ROI_X = -1.325f, newObj->ROI_Y = 0;
     newObj->scale = 1;
     newObj->r2Max = 100.f;
-    newObj->nMax  = 256;
+    newObj->nMaxInt  = 256;
 
     newObj->data = (unsigned char*) calloc(H*W*4, sizeof(unsigned char));
 
@@ -37,7 +37,7 @@ void calcMandelbrotSet(mandelbrot_t *obj) {
             float X = x0, Y = y0;
 
             int curIter = 0;
-            for (; curIter < obj->nMax; curIter++) {
+            for (; curIter < obj->nMaxInt; curIter++) {
                 float x2 = X*X,
                       y2 = Y*Y,
                       xy = X*Y;
@@ -50,8 +50,8 @@ void calcMandelbrotSet(mandelbrot_t *obj) {
                 X = x2 - y2 + x0,
                 Y = xy + xy + y0;
             }
-            if (curIter < obj->nMax) {
-                unsigned char color = sqrtf(curIter / (float)obj->nMax) * 255;
+            if (curIter < obj->nMaxInt) {
+                unsigned char color = sqrtf(curIter / (float)obj->nMaxInt) * 255;
 
                 obj->data[(iy*obj->W + ix) * 4 + 0] = 255 - color;
                 obj->data[(iy*obj->W + ix) * 4 + 1] = color % 2 * 64;

@@ -1,6 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
 #include <SFML/Graphics.hpp>
-#include <cstdlib>
-#include <cassert>
 #include "mandelbrot.hpp"
 
 const unsigned int H = 600;
@@ -28,8 +29,7 @@ int main()
     sf::Texture texture;
     texture.create(W, H);
     sf::Sprite sprite(texture);
-
-    mandelbrot_t *mandelbrotObj = initMandelbrotGen(W, H); 
+    mandelbrot_t *mandelbrotObj = initMandelbrotGen(W, H);
 
     while (window.isOpen())
     { 
@@ -39,7 +39,6 @@ int main()
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
-            
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
