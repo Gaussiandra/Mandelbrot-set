@@ -28,7 +28,6 @@ void deleteMandelbrotObj(mandelbrot_t *obj) {
     free(obj);
 }
 
-// переменные
 void calcMandelbrotSet(mandelbrot_t *obj) {
     for (int iy = 0; iy < obj->H; ++iy) {
         for (int ix = 0; ix < obj->W; ix += 8) {
@@ -47,12 +46,12 @@ void calcMandelbrotSet(mandelbrot_t *obj) {
                        xy = _mm256_mul_ps(X, Y),
                        r2 = _mm256_add_ps(x2, y2);
                 
-                __m256 cmp = _mm256_cmp_ps(r2, obj->r2Max, _CMP_LE_OQ); // os?
+                __m256 cmp = _mm256_cmp_ps(r2, obj->r2Max, _CMP_LE_OQ);
                 int mask   = _mm256_movemask_ps(cmp);
                 if (mask == 0) {
                     break;
                 }
-                nEachIter = _mm256_sub_epi32(nEachIter, _mm256_castps_si256(cmp)); //??
+                nEachIter = _mm256_sub_epi32(nEachIter, _mm256_castps_si256(cmp));
                     
                 X = _mm256_add_ps(_mm256_sub_ps(x2, y2), X0);
                 Y = _mm256_add_ps(_mm256_add_ps(xy, xy), Y0);
@@ -64,7 +63,6 @@ void calcMandelbrotSet(mandelbrot_t *obj) {
                 float *colorsFloat = (float*) &colors;
                 int *itersInt = (int*) &nEachIter;
 
-                //func
                 if (itersInt[i] < obj->nMaxInt) {
                     obj->data[(iy*obj->W + ix + i) * 4 + 0] = 255 - colorsFloat[i];
                     obj->data[(iy*obj->W + ix + i) * 4 + 1] = (int)colorsFloat[i] % 2 * 64;
