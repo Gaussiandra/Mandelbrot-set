@@ -1,6 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
 #include <SFML/Graphics.hpp>
 #include "mandelbrot.hpp"
 
@@ -21,7 +21,7 @@ int main()
     fpsText.setFillColor(sf::Color::White);
 
     char fpsString[FPS_STRING_LEN] = {};
-    float fps = 0;
+    float curFps = 0, smoothedFps = 0;
     sf::Clock clock = sf::Clock();
     sf::Time previousTime = clock.getElapsedTime();
     sf::Time currentTime = sf::Time::Zero;
@@ -77,8 +77,9 @@ int main()
         window.draw(sprite);
 
         currentTime = clock.getElapsedTime();
-        fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
-        sprintf(fpsString, "fps = %.3f", fps);
+        curFps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds());
+        smoothedFps = smoothedFps * 0.9 + curFps * 0.1;
+        sprintf(fpsString, "fps = %.1f", smoothedFps);
         fpsText.setString(fpsString);
         previousTime = currentTime;
         window.draw(fpsText);
